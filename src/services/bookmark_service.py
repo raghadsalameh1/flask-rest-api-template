@@ -5,6 +5,11 @@ def get(url):
     bookmark = Bookmark.query.filter_by(url=url).first()
     return bookmark
 
+def get_by_id(id, user_id):
+    bookmark = Bookmark.query.filter_by(user_id=user_id, id=id).first()
+    return bookmark
+
+
 def add(body,url,user_id):
     bookmark = Bookmark(body=body,url=url,user_id=user_id)
     try:
