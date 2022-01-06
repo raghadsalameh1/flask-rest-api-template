@@ -48,8 +48,8 @@ def login():
     if user:
         is_password_correct = check_password_hash(user.password,password)
         if is_password_correct:
-            refresh = create_refresh_token(identity= user.email)
-            access = create_access_token(identity= user.email)
+            refresh = create_refresh_token(identity= [user.id,user.email])
+            access = create_access_token(identity= [user.id,user.email])
             # we need to handle the output
             return jsonify({
                 "user":{
@@ -63,8 +63,8 @@ def login():
 @auth.get('/me')
 @jwt_required()
 def profile():
-    user_email = get_jwt_identity()
-    user = user_service.get_user(user_email)
+    user = get_jwt_identity()
+    user = user_service.get_user(user[1])
     if user:
         return jsonify({
                 "user":{
@@ -76,6 +76,6 @@ def profile():
 @auth.get('/refresh-token')
 @jwt_required(refresh=True)
 def refresh_token():
-    user_email = get_jwt_identity()
-    access = create_access_token(identity= user_email)
+    user = get_jwt_identity()
+    access = create_access_token(identity= [user[0],user[1]])
     return jsonify({"access_token": access}), status.HTTP_200_OK
