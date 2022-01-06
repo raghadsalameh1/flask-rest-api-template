@@ -35,9 +35,13 @@ def bookmarks_():
         else:
             return jsonify({"error":"Something went wrong"}), status.HTTP_500_INTERNAL_SERVER_ERROR
     else:
-        bookmarks = bookmark_service.get_all(user_id)
+        page = request.args.get('page',1,type=int) # default current page is the first page
+        per_page = request.args.get('per_page',5,type=int) # the default is 5 elements per page
+
+
+        bookmarks = bookmark_service.get_all(user_id).paginate(page= page, per_page = per_page)
         data = []
-        for bookmark in bookmarks:
+        for bookmark in bookmarks.items:
             data.append({
                 "id": bookmark.id,
                 "body":bookmark.body, 
@@ -47,4 +51,14 @@ def bookmarks_():
                 "created_at":bookmark.created_at,
                 "updated_at":bookmark.updated_at
             })
-        return jsonify({"data":data}), status.HTTP_200_OK
+            
+        meta = {
+            'current_page': bookmarks.page,
+            'total_pages': bookmarks.pages,
+            'total_count': bookmarks.total,
+            'prev_page': bookmarks.prev_num,
+            'next_page': bookmarks.next_num,
+            'has_next': bookmarks.has_next,
+            'has_prev': bookmarks.has_prev,
+        }
+        return jsonify({"data":data, "meta":meta}), status.HTTP_200_OK

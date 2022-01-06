@@ -19,7 +19,7 @@ def add(body,url,user_id):
 def get_all(user_id=None):
     bookmarks = []
     if(user_id is not None):
-        bookmarks = Bookmark.query.filter_by(user_id=user_id).all()
+        bookmarks = Bookmark.query.filter_by(user_id=user_id)
     else:
-        bookmarks = Bookmark.query.all()
+        bookmarks = Bookmark.query
     return bookmarks
