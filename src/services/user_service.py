@@ -1,7 +1,7 @@
 from src.models.User import User
 from src.models import db
 
-def add_user(username,email,hashed_password):
+def add(username,email,hashed_password):
     new_user = User(email= email, username = username,password = hashed_password)
     try:
         db.session.add(new_user) # add new item to database
@@ -26,6 +26,6 @@ def username_exist(username):
     else:
         return False
 
-def get_user(email):
+def get(email):
     user = User.query.filter_by(email=email).first()
     return user

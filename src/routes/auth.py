@@ -30,7 +30,7 @@ def register():
         return jsonify({"error":"Username is already exist"}), status.HTTP_409_CONFLICT
     else:
         hashed_password = generate_password_hash(password)
-        if user_service.add_user(username,email,hashed_password):
+        if user_service.add(username,email,hashed_password):
             return jsonify({"message":"User created successfully",
                             "user":{
                                 "username":username, "email":email
@@ -44,7 +44,7 @@ def login():
     # we need to handle the DTO
     email = request.json['email']
     password = request.json['password']
-    user = user_service.get_user(email)
+    user = user_service.get(email)
     if user:
         is_password_correct = check_password_hash(user.password,password)
         if is_password_correct:
@@ -64,7 +64,7 @@ def login():
 @jwt_required()
 def profile():
     user = get_jwt_identity()
-    user = user_service.get_user(user[1])
+    user = user_service.get(user[1])
     if user:
         return jsonify({
                 "user":{
