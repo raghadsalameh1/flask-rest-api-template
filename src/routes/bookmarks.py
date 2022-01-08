@@ -80,3 +80,50 @@ def get_bookmark(id):
         'created_at': bookmark.created_at,
         'updated_at': bookmark.updated_at,
     }), status.HTTP_200_OK
+
+
+@bookmarks.put('/<int:id>')
+@bookmarks.patch('/<int:id>')
+@jwt_required()
+def editbookmark(id):
+    current_user = get_jwt_identity()
+    user_id = current_user[0]
+
+    bookmark = bookmark_service.get_by_id(id,user_id)
+    if not bookmark:
+        return jsonify({'message': 'Item not found'}), status.HTTP_404_NOT_FOUND
+
+    body = request.json['body'] 
+    url = request.get_json().get('url', '')
+
+    if not validators.url(url):
+        return jsonify({"error":"The provided URL is not valid"}), status.HTTP_400_BAD_REQUEST
+    
+    # Check if the updated URL is not requested before
+    if bookmark_service.get(url,id):
+        return jsonify({"error":"The provided URL is already exist"}), status.HTTP_409_CONFLICT
+
+    if bookmark_service.updated(id,user_id,body,url):
+        return jsonify({
+            'id': bookmark.id,
+            'url': bookmark.url,
+            'short_url': bookmark.short_url,
+            'visit': bookmark.visits,
+            'body': bookmark.body,
+            'created_at': bookmark.created_at,
+            'updated_at': bookmark.updated_at,
+        }), status.HTTP_200_OK
+    else:
+        return jsonify({"error":"The provided URL is already exist"}), status.HTTP_400_BAD_REQUEST
+
+@bookmarks.delete("/<int:id>")
+@jwt_required()
+def delete_bookmark(id):
+    current_user = get_jwt_identity()
+    bookmark = bookmark_service.delete(id,current_user[0])
+    if not bookmark:
+        return jsonify({'message': 'Item not found'}), status.HTTP_404_NOT_FOUND 
+    return jsonify({}), status.HTTP_204_NO_CONTENT
+
+
+
