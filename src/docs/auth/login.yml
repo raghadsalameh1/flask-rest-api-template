@@ -1,0 +1,48 @@
+User log in
+---
+tags:
+  - Authentication
+parameters:
+  - name: body
+    description: The body should contain the user login credentials
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - "email"
+        - "password"
+      properties:
+        email:
+          type: "email"
+          example: "user@gmail.com"
+        password:
+          type: "string"
+          format: password
+          example: "********"
+responses:
+  200:
+    description: User successfully logs in
+    schema:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY0MTc0MDQ5MCwianRpIjoiYjM5YjgxYWQtOGFiNi00OTkwLWExZTktZGIwNmEzNDk2OWExIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6WzEsImVtYWlsQG1haWwuY29tIl0sIm5iZiI6MTY0MTc0MDQ5MCwiZXhwIjoxNjQxODI2ODkwfQ.T3d07HC17pO7AzzDXxkNhX5mK-DqwxUAYDA6gdwNjiA
+        email:
+          type: email
+          example: mail@gmail.com
+        refresh_token:
+          type: string
+          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY0MTc0MDQ5MCwianRpIjoiN2FiODZlMzEtOGNjZi00ZWI1LTkxODAtYzhmZjk0ZmQ2N2I5IiwidHlwZSI6InJlZnJlc2giLCJzdWIiOlsxLCJlbWFpbEBtYWlsLmNvbSJdLCJuYmYiOjE2NDE3NDA0OTAsImV4cCI6MTY0NDMzMjQ5MH0.2L0GVDx_qNvbM4caEP7GydaXrjbHM7sueRNTtZm7fwE
+        username:
+          type: string
+          example: username1
+  400:
+    description: Failed to login due to bad data
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Eather email or password is not correct

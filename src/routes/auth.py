@@ -6,11 +6,13 @@ import validators
 import src.services.user_service as user_service
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required
+from flasgger import swag_from
 
 
 auth = Blueprint("auth",__name__, url_prefix = "/api/v1/auth")
 
 @auth.post('/register')
+@swag_from('../docs/auth/register.yml')
 def register():
     username = request.json['username'] 
     email = request.json['email']
@@ -40,6 +42,7 @@ def register():
 
 
 @auth.post('/login')
+@swag_from('../docs/auth/login.yml')
 def login():
     # we need to handle the DTO
     email = request.json['email']
@@ -58,7 +61,7 @@ def login():
                     "username":user.username,
                     "email":user.email
             }}), status.HTTP_200_OK
-    return jsonify({"error":"Eather email or password is not correct"}), status.HTTP_404_NOT_FOUND   
+    return jsonify({"error":"Eather email or password is not correct"}), status.HTTP_400_BAD_REQUEST  
 
 @auth.get('/me')
 @jwt_required()

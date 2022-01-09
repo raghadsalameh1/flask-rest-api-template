@@ -5,10 +5,12 @@ from flask_jwt_extended.view_decorators import jwt_required
 from src.constants import http_status_codes as status
 from src.services import bookmark_service as bookmark_service
 import validators
+from flasgger import swag_from
 
 bookmarks = Blueprint("bookmarks",__name__, url_prefix = "/api/v1/bookmarks")
 
 @bookmarks.route('', methods = ['GET', 'POST'])
+# we need to handle swagger for this kind of endpoints
 @jwt_required()
 def bookmarks_():
     current_user =  get_jwt_identity()
@@ -127,6 +129,7 @@ def delete_bookmark(id):
 
 
 @bookmarks.get('/<short_url>')
+@swag_from('../docs/bookmarks/short_url.yml')
 def redirect_to_url(short_url):
     bookmark = bookmark_service.get_by_shorturl(short_url)
     if bookmark:
