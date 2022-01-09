@@ -1,1 +1,1 @@
-web: gunicorn src.runner:application
+web: waitress-serve --port=80 --call "src:create_app" 
