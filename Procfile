@@ -1,1 +1,1 @@
-web: waitress-serve --port=80 --call "src:create_app" 
+web: waitress-serve --port=$PORT --call "src:create_app" 
