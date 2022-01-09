@@ -13,6 +13,9 @@ def get_by_id(id, user_id):
     bookmark = Bookmark.query.filter_by(user_id=user_id, id=id).first()
     return bookmark
 
+def get_by_shorturl(short_url):
+    bookmark = Bookmark.query.filter_by(short_url=short_url).first()
+    return bookmark
 
 def add(body,url,user_id):
     bookmark = Bookmark(body=body,url=url,user_id=user_id)
@@ -44,7 +47,7 @@ def delete(id,user_id):
            db.session.commit()
            return True
         except ValueError:
-            print('Error updating bookmark')
+            print('Error deleting bookmark')
             return False
     return False
 
@@ -55,3 +58,12 @@ def get_all(user_id=None):
     else:
         bookmarks = Bookmark.query
     return bookmarks
+
+def increment_visits(bookmark):
+    bookmark.visits = bookmark.visits+1
+    try:
+        db.session.commit()
+        return True
+    except ValueError:
+        print('Error incrementing visits for bookmark ', bookmark.id)
+        return False

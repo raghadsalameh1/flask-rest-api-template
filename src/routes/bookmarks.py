@@ -1,4 +1,4 @@
-from flask import Blueprint,request
+from flask import Blueprint,request,redirect
 from flask.json import jsonify
 from flask_jwt_extended.utils import get_jwt_identity
 from flask_jwt_extended.view_decorators import jwt_required
@@ -126,4 +126,12 @@ def delete_bookmark(id):
     return jsonify({}), status.HTTP_204_NO_CONTENT
 
 
-
+@bookmarks.get('/<short_url>')
+def redirect_to_url(short_url):
+    bookmark = bookmark_service.get_by_shorturl(short_url)
+    if bookmark:
+        if bookmark_service.increment_visits(bookmark):
+            return redirect(bookmark.url)
+        else:
+            return jsonify({ "error": "Something went wrong"}), status.HTTP_204_NO_CONTENT
+    return jsonify({'message': 'Item not found'}), status.HTTP_404_NOT_FOUND 
