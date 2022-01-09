@@ -1,7 +1,9 @@
+from datetime import timedelta
 from flask import Flask
 import os
 from src.routes.auth import auth
 from src.routes.bookmarks import bookmarks
+from src.error_handlers import errors
 from src.models import db
 from flask_jwt_extended import JWTManager
 
@@ -13,7 +15,9 @@ def create_app(test_config=None):
             SECRET_KEY= os.environ.get("SECRET_KEY"),
             SQLALCHEMY_DATABASE_URI = os.environ.get("SQLAlchemy_DB_URI"),
             SQLALCHEMY_TRACK_MODIFICATIONS = False,
-            JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
+            JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY"),
+            JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24),
+            PROPAGATE_EXCEPTIONS = True
         )
     else:
         app.config.from_mapping(test_config)
@@ -27,6 +31,7 @@ def create_app(test_config=None):
 
     app.register_blueprint(auth)
     app.register_blueprint(bookmarks)
+    app.register_blueprint(errors)
 
     return app    
 
