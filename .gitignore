@@ -6,6 +6,9 @@ __pycache__/
 # Vs code depugging files
 .vscode/
 
+# database files
+*.db
+
 # C extensions
 *.so
 
