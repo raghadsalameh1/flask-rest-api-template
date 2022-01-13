@@ -35,7 +35,9 @@ def create_app(config_name):
 # this is the first file that is executed. we delete the app file and put the startup file in 
 # vs code extension as "src" so the first file that will be executed is this file.
 def create_database(app):
+    #db.create_all(app=app) # uncomment this line when you want to create tables in mysql db
     # db.drop_all(app=app)
-    if not os.path.exists('bookmarks.db'):
-        db.create_all(app=app)
-        print('Created Database!')
+    if os.getenv('FLASK_ENV') == 'development':
+        if not os.path.exists('bookmarks.db'):
+            db.create_all(app=app)
+            print('Created Database!')

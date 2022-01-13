@@ -7,7 +7,7 @@ __pycache__/
 .vscode/
 
 # database files
-*.db
+#*.db
 
 # C extensions
 *.so
