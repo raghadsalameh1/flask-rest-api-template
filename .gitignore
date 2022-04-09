@@ -6,6 +6,9 @@ __pycache__/
 # Vs code depugging files
 .vscode/
 
+# wily
+wily-report.html
+
 # database files
 *.db
 
